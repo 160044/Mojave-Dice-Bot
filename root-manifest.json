@@ -1,0 +1,261 @@
+{
+  "manifestVersion": "1.0",
+  "name": "Mojave D&D Bot",
+  "description": "Complete D&D companion with dice rolling, initiative tracking, and status effects. Features auto-save persistence, connection keepalive, and comprehensive D&D 5e condition support.",
+  "version": "1.3.0",
+  "author": "Root Community",
+  "icon": "🎲",
+  "tags": ["dnd", "dice", "rpg", "gaming", "tabletop", "d&d", "initiative", "status-effects"],
+  "readme": "README.md",
+  "changelog": "CHANGELOG.md",
+  "license": "MIT",
+  "homepage": "https://github.com/yourusername/mojave-bot",
+  "permissions": {
+    "messages": {
+      "read": true,
+      "write": true,
+      "delete": true
+    },
+    "channels": {
+      "read": true,
+      "write": false
+    },
+    "users": {
+      "read": true,
+      "write": false
+    }
+  },
+  "settings": {
+    "botPrefix": {
+      "type": "string",
+      "default": "!",
+      "description": "Command prefix for the bot",
+      "required": false
+    },
+    "autoSaveInterval": {
+      "type": "number",
+      "default": 120,
+      "description": "Auto-save interval in seconds (default: 120 = 2 minutes)",
+      "required": false
+    }
+  },
+  "commands": [
+    {
+      "name": "help",
+      "description": "Show help menu with command categories",
+      "usage": "!help [category]",
+      "examples": ["!help", "!help dice", "!help init", "!help status"],
+      "category": "Utility"
+    },
+    {
+      "name": "roll",
+      "aliases": ["r"],
+      "description": "Roll dice with modifiers and special features",
+      "usage": "!roll <dice>",
+      "examples": ["!roll 2d20+5", "!r 4d6kh3", "!r 4d6rr1kh3"],
+      "category": "Dice"
+    },
+    {
+      "name": "adv",
+      "aliases": ["advantage"],
+      "description": "Roll with advantage (2d20 keep highest)",
+      "usage": "!adv [+modifier]",
+      "examples": ["!adv", "!adv +5"],
+      "category": "Dice"
+    },
+    {
+      "name": "dis",
+      "aliases": ["disadvantage"],
+      "description": "Roll with disadvantage (2d20 keep lowest)",
+      "usage": "!dis [+modifier]",
+      "examples": ["!dis", "!dis +3"],
+      "category": "Dice"
+    },
+    {
+      "name": "rr",
+      "aliases": ["repeat"],
+      "description": "Roll the same dice expression multiple times",
+      "usage": "!rr <iterations> <dice>",
+      "examples": ["!rr 3 2d20+5", "!rr 10 4d6kh3"],
+      "category": "Dice"
+    },
+    {
+      "name": "stats",
+      "description": "Generate 6 D&D ability scores (4d6 keep highest 3)",
+      "usage": "!stats",
+      "category": "Character Creation"
+    },
+    {
+      "name": "threshold",
+      "description": "Generate D&D threshold stats (reroll 1s/2s, drop lowest)",
+      "usage": "!threshold",
+      "category": "Character Creation"
+    },
+    {
+      "name": "init",
+      "description": "Display initiative tracker",
+      "usage": "!init",
+      "category": "Initiative"
+    },
+    {
+      "name": "init add",
+      "aliases": ["initadd", "ia"],
+      "description": "Add combatant to initiative",
+      "usage": "!init add <name> <initiative> [hp] [max_hp]",
+      "examples": ["!init add Fighter 18 25 25", "!ia Goblin 15"],
+      "category": "Initiative"
+    },
+    {
+      "name": "init hidden",
+      "aliases": ["inithidden", "ih"],
+      "description": "Add combatant with hidden HP (shows status instead of numbers)",
+      "usage": "!init hidden <name> <initiative> [hp] [max_hp]",
+      "examples": ["!init hidden Dragon 20 200 200"],
+      "category": "Initiative"
+    },
+    {
+      "name": "init next",
+      "aliases": ["initnext", "in"],
+      "description": "Advance to next turn (auto-ticks status durations at round start)",
+      "usage": "!init next",
+      "category": "Initiative"
+    },
+    {
+      "name": "init damage",
+      "aliases": ["initdamage", "id"],
+      "description": "Deal damage to a combatant",
+      "usage": "!init damage <name> <amount>",
+      "examples": ["!init damage Goblin 10", "!id Fighter 5"],
+      "category": "Initiative"
+    },
+    {
+      "name": "init heal",
+      "aliases": ["initheal"],
+      "description": "Heal a combatant",
+      "usage": "!init heal <name> <amount>",
+      "examples": ["!init heal Fighter 10"],
+      "category": "Initiative"
+    },
+    {
+      "name": "init remove",
+      "aliases": ["initremove", "ir"],
+      "description": "Remove combatant from initiative",
+      "usage": "!init remove <name>",
+      "examples": ["!init remove Goblin"],
+      "category": "Initiative"
+    },
+    {
+      "name": "init clear",
+      "aliases": ["initclear"],
+      "description": "End combat and clear initiative",
+      "usage": "!init clear",
+      "category": "Initiative"
+    },
+    {
+      "name": "status",
+      "aliases": ["st"],
+      "description": "View active status effects or condition details",
+      "usage": "!status [combatant|condition]",
+      "examples": ["!status", "!status Fighter", "!status poisoned"],
+      "category": "Status Effects"
+    },
+    {
+      "name": "statusadd",
+      "aliases": ["sa", "status add"],
+      "description": "Apply status effect to combatant",
+      "usage": "!statusadd <name> <condition> [rounds]",
+      "examples": ["!statusadd Fighter blessed", "!sa Goblin poisoned 3"],
+      "category": "Status Effects"
+    },
+    {
+      "name": "statusremove",
+      "aliases": ["status remove"],
+      "description": "Remove status effect from combatant",
+      "usage": "!statusremove <name> [condition]",
+      "examples": ["!statusremove Fighter poisoned", "!statusremove Fighter"],
+      "category": "Status Effects"
+    },
+    {
+      "name": "statustick",
+      "aliases": ["stk", "status tick"],
+      "description": "Manually advance all status effect durations by 1 round",
+      "usage": "!statustick",
+      "category": "Status Effects"
+    },
+    {
+      "name": "statusclear",
+      "aliases": ["sclear", "status clear"],
+      "description": "Clear all status effects from all combatants",
+      "usage": "!statusclear",
+      "category": "Status Effects"
+    },
+    {
+      "name": "conditions",
+      "description": "List all available D&D 5e conditions and custom effects",
+      "usage": "!conditions",
+      "category": "Status Effects"
+    },
+    {
+      "name": "break",
+      "aliases": ["br", "sep", "separator"],
+      "description": "Insert a visual separator in chat",
+      "usage": "!break",
+      "category": "Utility"
+    },
+    {
+      "name": "ping",
+      "description": "Test bot connection",
+      "usage": "!ping",
+      "category": "Utility"
+    }
+  ],
+  "features": [
+    "🎲 Complete dice rolling system with modifiers (kh, kl, rr, combinations)",
+    "⚔️ Initiative tracker with hidden HP and automatic turn pinging",
+    "🎭 24 D&D 5e conditions with full descriptions and duration tracking",
+    "💾 Automatic persistence - combat state survives bot restarts",
+    "💓 Connection keepalive for stable operation",
+    "📝 Flexible command syntax - use !command or !command sub",
+    "🔄 Auto-tick status durations at round start",
+    "📊 Repeat rolls for multiple iterations",
+    "🎯 Advantage/Disadvantage support",
+    "📋 Character generation tools",
+    "🔒 Hidden HP feature - automatically deletes command messages to keep HP secret"
+  ],
+  "categories": [
+    {
+      "name": "Dice",
+      "description": "Comprehensive dice rolling with all modifiers",
+      "icon": "🎲"
+    },
+    {
+      "name": "Initiative",
+      "description": "Combat tracking with HP management",
+      "icon": "⚔️"
+    },
+    {
+      "name": "Status Effects",
+      "description": "D&D 5e conditions and custom effects",
+      "icon": "🎭"
+    },
+    {
+      "name": "Character Creation",
+      "description": "Ability score generation",
+      "icon": "📊"
+    },
+    {
+      "name": "Utility",
+      "description": "Helper commands and tools",
+      "icon": "🛠️"
+    }
+  ],
+  "requirements": {
+    "node": ">=22.0.0",
+    "rootSDK": ">=1.0.0"
+  },
+  "support": {
+    "documentation": "README.md",
+    "issues": "https://github.com/yourusername/mojave-bot/issues",
+    "community": "https://discord.gg/yourserver"
+  }
+}
